@@ -26,9 +26,10 @@
   </parent>
 
   <!-- TODO: when out of labs, switch to org.jclouds.api -->
-  <groupId>org.apache.jclouds.labs</groupId>
+  <groupId>io.cloudsoft.jclouds.labs</groupId>
   <artifactId>vcloud-director</artifactId>
   <name>jclouds vcloud-director api</name>
+  <version>1.8.2-alpha-cloudsoft.6</version>
   <description>jclouds components to access an implementation of VMware vCloud Director 1.5+</description>
   <packaging>bundle</packaging>
 
@@ -74,7 +75,7 @@
       <version>${jclouds.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds.labs</groupId>
+      <groupId>io.cloudsoft.jclouds.labs</groupId>
       <artifactId>dmtf</artifactId>
       <version>${project.version}</version>
     </dependency>
