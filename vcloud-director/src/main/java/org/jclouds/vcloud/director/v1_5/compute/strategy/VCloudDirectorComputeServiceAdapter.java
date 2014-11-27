@@ -160,7 +160,7 @@ public class VCloudDirectorComputeServiceAdapter implements
       String networkName = network.getName();
       SourcedCompositionItemParam vmItem = createVmItem(toAddVm, networkName);
       ComposeVAppParams compositionParams = ComposeVAppParams.builder()
-              .name(name("composed-"))
+              .name(name)
               .instantiationParams(instantiationParams(vdc, networkName, network))
               .sourcedItems(ImmutableList.of(vmItem))
               .deploy()

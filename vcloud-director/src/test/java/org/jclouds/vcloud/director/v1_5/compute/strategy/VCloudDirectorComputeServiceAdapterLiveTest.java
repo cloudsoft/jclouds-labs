@@ -60,8 +60,8 @@ public class VCloudDirectorComputeServiceAdapterLiveTest extends BaseVCloudDirec
       String name = "vm-" + new Random().nextInt();
 
       Template template = templateBuilder
-              .osFamily(OsFamily.CENTOS)
-              .imageNameMatches("centos 6.4 x64")
+              //.osFamily(OsFamily.CENTOS)
+              .imageNameMatches("centos6.4x64")
               .build();
 
       template.getOptions().networks("Deployment_Network_01");

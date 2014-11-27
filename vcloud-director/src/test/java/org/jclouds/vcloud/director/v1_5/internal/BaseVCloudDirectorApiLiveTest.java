@@ -474,8 +474,9 @@ public abstract class BaseVCloudDirectorApiLiveTest extends BaseApiLiveTest<VClo
 					}
 				});
 	}
-	
+
 	public void cleanUpVAppTemplateInOrg() {
+      /*
 		FluentIterable<VAppTemplate> vAppTemplates = FluentIterable
 				.from(vdc.getResourceEntities())
 				.filter(ReferencePredicates.typeEquals(VAPP_TEMPLATE))
@@ -496,8 +497,9 @@ public abstract class BaseVCloudDirectorApiLiveTest extends BaseApiLiveTest<VClo
 					api.getVAppTemplateApi().remove(input.getHref());
 				return false;
 			}});
+			*/
 	}	
-	
+
    protected Vdc lazyGetVdc() {
       if (vdc == null) {
          assertNotNull(vdcUrn, String.format(URN_REQ_LIVE, VDC));
