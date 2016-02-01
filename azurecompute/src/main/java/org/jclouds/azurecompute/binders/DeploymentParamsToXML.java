@@ -50,21 +50,11 @@ public final class DeploymentParamsToXML implements Binder {
                     .e("AdminPassword").t(params.password()).up()
                     .e("ResetPasswordOnFirstLogon").t("false").up()
                     .e("EnableAutomaticUpdate").t("false").up()
-                    .e("DomainJoin")
-                    .e("Credentials")
-                    .e("Domain").t(params.name()).up()
-                    .e("Username").t(params.username()).up()
-                    .e("Password").t(params.password()).up()
-                    .up() // Credentials
-                    .e("JoinDomain").t(params.name()).up()
-                    .up() // Domain Join
-                    .e("StoredCertificateSettings").up()
                     .e("WinRM")
                     .e("Listeners")
                     .e("Listener")
-                    .e("Protocol").t("http").up().up().up().up()
+                    .e("Protocol").t("Https").up().up().up().up()
                     .e("AdminUsername").t(params.username()).up()
-                    .e("AdminPassword").t(params.username()).up()
                     .up(); // Windows ConfigurationSet
          } else if (params.os() == OSImage.Type.LINUX) {
             XMLBuilder configBuilder = builder.e("ConfigurationSet"); // Linux
