@@ -19,7 +19,7 @@ package org.jclouds.azurecompute.util;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jclouds.azurecompute.domain.Operation.Status.FAILED;
-import java.util.concurrent.CancellationException;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -150,7 +150,7 @@ public class ConflictManagementPredicate implements Predicate<String> {
                     ? HttpResponseException.class.cast(e) : (e.getCause() instanceof HttpResponseException)
                             ? HttpResponseException.class.cast(e.getCause())
                             : null;
-            if (re == null) {
+            if (re == null || re.getResponse() == null) {
                throw e;
             } else {
                final HttpResponse res = re.getResponse();
@@ -169,7 +169,6 @@ public class ConflictManagementPredicate implements Predicate<String> {
             } catch (InterruptedException ex) {
                // ignore
             }
-
             now = System.currentTimeMillis();
          }
       }
@@ -178,7 +177,12 @@ public class ConflictManagementPredicate implements Predicate<String> {
          throw new RuntimeException(new TimeoutException(requestId));
       }
 
-      return operationSucceeded.apply(requestId);
+      try {
+         return operationSucceeded.apply(requestId);
+      } catch (RuntimeException e) {
+         logger.error(e, "%s", requestId, e.getMessage());
+         return false;
+      }
    }
 
    private static class OperationSucceededPredicate implements Predicate<String> {
@@ -192,17 +196,19 @@ public class ConflictManagementPredicate implements Predicate<String> {
       @Override
       public boolean apply(final String input) {
          final Operation operation = api.getOperationApi().get(input);
+         if (operation == null) return false;
          switch (operation.status()) {
             case SUCCEEDED:
                return true;
-
             case IN_PROGRESS:
             case UNRECOGNIZED:
                return false;
-
             case FAILED:
-               throw new RuntimeException(new CancellationException(input));
-
+               String message = String.format("Operation %s failed for unknown reasons", operation.id());
+               if (operation.error() != null) {
+                 message = String.format("Operation %s failed with the following error:' %s'", operation.id(), operation.error().toString());
+               }
+               throw new RuntimeException(message);
             default:
                throw new IllegalStateException("Operation is in invalid status: " + operation.status().name());
          }
