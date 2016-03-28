@@ -30,7 +30,7 @@
   <groupId>io.cloudsoft.jclouds.labs</groupId>
   <artifactId>azurecompute</artifactId>
   <name>jclouds azure compute API</name>
-  <version>1.9.2-cloudsoft.20160324.1555</version>
+  <version>1.9.2-cloudsoft.20160324.1555-SNAPSHOT</version>
   <description>jclouds components to access an implementation of Azure's Compute Service</description>
   <packaging>bundle</packaging>
 
