@@ -180,7 +180,7 @@ public class ConflictManagementPredicate implements Predicate<String> {
       try {
          return operationSucceeded.apply(requestId);
       } catch (RuntimeException e) {
-         logger.error(e, "%s", requestId, e.getMessage());
+         logger.error(e, "%s", e.getMessage());
          return false;
       }
    }
