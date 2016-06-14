@@ -32,7 +32,7 @@
   <name>jclouds docker API</name>
   <description>ComputeService binding to the Docker API</description>
   <packaging>bundle</packaging>
-  <version>1.9.2-cloudsoft.20160613</version>
+  <version>1.9.2-cloudsoft.20160614</version>
 
   <properties>
     <test.docker.api-version>1.19</test.docker.api-version>
@@ -211,7 +211,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
-            <version>1.9.2</version>
+            <version>1.9.1</version>
             <executions>
               <execution>
                 <id>regex-property</id>
