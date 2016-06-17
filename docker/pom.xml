@@ -32,7 +32,7 @@
   <name>jclouds docker API</name>
   <description>ComputeService binding to the Docker API</description>
   <packaging>bundle</packaging>
-  <version>1.9.2-cloudsoft.20160614</version>
+  <version>1.9.2-cloudsoft.20160617</version>
 
   <properties>
     <test.docker.api-version>1.19</test.docker.api-version>
