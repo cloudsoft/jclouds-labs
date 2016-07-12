@@ -21,9 +21,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache.jclouds.labs</groupId>
+    <groupId>io.cloudsoft.jclouds.labs</groupId>
     <artifactId>jclouds-labs</artifactId>
-    <version>1.9.3-SNAPSHOT</version>
+    <version>1.9.2-alpha.20160712</version>
   </parent>
 
   <!-- TODO: when out of labs, switch to org.jclouds.provider -->
@@ -49,12 +49,12 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.apache.jclouds</groupId>
+      <groupId>io.cloudsoft.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds</groupId>
+      <groupId>io.cloudsoft.jclouds</groupId>
       <artifactId>jclouds-compute</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -69,7 +69,7 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds.driver</groupId>
+      <groupId>io.cloudsoft.jclouds.driver</groupId>
       <artifactId>jclouds-okhttp</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -79,20 +79,20 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds.driver</groupId>
+      <groupId>io.cloudsoft.jclouds.driver</groupId>
       <artifactId>jclouds-slf4j</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds</groupId>
+      <groupId>io.cloudsoft.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.jclouds</groupId>
+      <groupId>io.cloudsoft.jclouds</groupId>
       <artifactId>jclouds-compute</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
