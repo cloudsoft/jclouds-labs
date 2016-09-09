@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.compute.extensions;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.azurecompute.compute.AzureComputeServiceAdapter.generateIllegalStateExceptionMessage;
+
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ import org.jclouds.azurecompute.domain.NetworkConfiguration;
 import org.jclouds.azurecompute.domain.NetworkConfiguration.VirtualNetworkSite;
 import org.jclouds.azurecompute.domain.NetworkSecurityGroup;
 import org.jclouds.azurecompute.domain.Role;
+import org.jclouds.azurecompute.domain.Role.ConfigurationSet.SubnetName;
 import org.jclouds.azurecompute.domain.Rule;
 import org.jclouds.azurecompute.util.ConflictManagementPredicate;
 import org.jclouds.azurecompute.util.NetworkSecurityGroups;
@@ -46,8 +48,11 @@ import org.jclouds.net.domain.IpProtocol;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 
@@ -102,8 +107,12 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
 
       final Deployment deployment = api.getDeploymentApiForService(name).get(name);
       final String virtualNetworkName = deployment.virtualNetworkName();
-
-      final List<String> subnetNames = FluentIterable.from(deployment.roleList())
+      List<Role> roleList = deployment.roleList();
+      if (roleList == null) {
+          return ImmutableSet.of();
+      }
+      
+      final List<String> subnetNames = FluentIterable.from(roleList)
               .transformAndConcat(new Function<Role, Iterable<Role.ConfigurationSet>>() {
                  @Override
                  public Iterable<Role.ConfigurationSet> apply(final Role input) {
@@ -113,7 +122,8 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
               .transformAndConcat(new Function<Role.ConfigurationSet, Iterable<Role.ConfigurationSet.SubnetName>>() {
                  @Override
                  public Iterable<Role.ConfigurationSet.SubnetName> apply(final Role.ConfigurationSet input) {
-                    return input.subnetNames();
+                    List<SubnetName> result = input.subnetNames();
+                    return result != null ? result : ImmutableList.<SubnetName>of();
                  }
               })
               .transform(new Function<Role.ConfigurationSet.SubnetName, String>() {
@@ -122,6 +132,7 @@ public class AzureComputeSecurityGroupExtension implements SecurityGroupExtensio
                     return input.name();
                  }
               })
+              .filter(Predicates.notNull())
               .toList();
 
       return FluentIterable.from(subnetNames)
