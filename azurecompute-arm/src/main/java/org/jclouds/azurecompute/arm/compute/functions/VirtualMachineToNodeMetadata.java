@@ -121,9 +121,11 @@ public class VirtualMachineToNodeMetadata implements Function<VirtualMachine, No
       builder.status(status.status());
       builder.backendStatus(status.backendStatus());
 
-      builder.publicAddresses(getPublicIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
-      builder.privateAddresses(getPrivateIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
-
+      if (virtualMachine.properties().networkProfile() != null) {
+         builder.publicAddresses(getPublicIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
+         builder.privateAddresses(getPrivateIpAddresses(virtualMachine.properties().networkProfile().networkInterfaces()));
+      }
+      
       String groupFromMetadata = null;
       if (virtualMachine.tags() != null) {
          addMetadataAndParseTagsFromCommaDelimitedValue(builder, virtualMachine.tags());
