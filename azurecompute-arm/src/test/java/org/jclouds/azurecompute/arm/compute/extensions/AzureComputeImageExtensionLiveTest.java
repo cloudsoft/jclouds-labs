@@ -84,7 +84,7 @@ public class AzureComputeImageExtensionLiveTest extends BaseImageExtensionLiveTe
       }
    }
 
-   @Override
+//   @Override
    protected void prepareNodeBeforeCreatingImage(NodeMetadata node) {
       // Don't wrap in the init-script, since the comand will clear the user
       // config, and jclouds won't be able to execute more than one command
