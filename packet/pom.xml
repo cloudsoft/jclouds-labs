@@ -27,8 +27,10 @@
     </parent>
 
     <!-- TODO: when out of labs, switch to org.jclouds.provider -->
+    <groupId>io.cloudsoft.jclouds.labs</groupId>
     <artifactId>packet</artifactId>
-    <name>jclouds Packet compute API</name>
+    <version>2.0.2.2-20170828.1139</version>
+    <name>Cloudsoft :: jclouds Packet compute API</name>
     <description>jclouds components to access an implementation of Packet's Compute Service</description>
     <packaging>bundle</packaging>
 
@@ -36,8 +38,8 @@
         <test.packet.endpoint>https://api.packet.net/</test.packet.endpoint>
         <test.packet.identity>projectId</test.packet.identity>
         <test.packet.credential>api key</test.packet.credential>
-        <jclouds.osgi.export>org.jclouds.packet*;version="${project.version}"</jclouds.osgi.export>
-        <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
+        <jclouds.osgi.export>org.jclouds.packet*;version="2.0.2.2.20170828.1139"</jclouds.osgi.export>
+        <jclouds.osgi.import>org.jclouds*;version="${project.parent.version}",*</jclouds.osgi.import>
     </properties>
 
     <dependencies>
@@ -141,5 +143,31 @@
             </build>
         </profile>
     </profiles>
+
+    <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.jclouds</groupId>
+            <artifactId>jclouds-resources</artifactId>
+            <version>${project.parent.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.gaul</groupId>
+        <artifactId>modernizer-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.jclouds</groupId>
+            <artifactId>jclouds-resources</artifactId>
+            <version>${project.parent.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
