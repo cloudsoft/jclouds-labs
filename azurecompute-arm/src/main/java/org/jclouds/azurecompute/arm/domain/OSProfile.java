@@ -16,14 +16,15 @@
  */
 package org.jclouds.azurecompute.arm.domain;
 
-import com.google.auto.value.AutoValue;
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+import java.util.Map;
 
+import org.jclouds.azurecompute.arm.util.GetEnumValue;
 import org.jclouds.javax.annotation.Nullable;
 import org.jclouds.json.SerializedNames;
 
-import java.util.List;
-import java.util.Map;
+import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 @AutoValue
@@ -44,6 +45,8 @@ public abstract class OSProfile {
             @Nullable
             public abstract String keyData();
 
+            public SSHPublicKey() {}
+
             @SerializedNames({"path", "keyData"})
             public static SSHPublicKey create(final String path, final String keyData) {
 
@@ -53,10 +56,12 @@ public abstract class OSProfile {
          }
 
          /**
-          * The list of public keys and paths
+          * The listVaults of public keys and paths
           */
          @Nullable
          public abstract List<SSHPublicKey> publicKeys();
+
+         public SSH() {}
 
          @SerializedNames({"publicKeys"})
          public static SSH create(final List<SSHPublicKey> publicKeys) {
@@ -77,6 +82,8 @@ public abstract class OSProfile {
       @Nullable
       public abstract SSH ssh();
 
+      public LinuxConfiguration() {}
+      
       @SerializedNames({"disablePasswordAuthentication", "ssh"})
       public static LinuxConfiguration create(final String disablePasswordAuthentication,
                                               final SSH ssh) {
@@ -91,6 +98,45 @@ public abstract class OSProfile {
 
       @AutoValue
       public abstract static class WinRM {
+          public enum Protocol {
+
+              HTTP("http"),
+              HTTPS("https"),
+              UNRECOGNIZED("Unrecognized");
+
+              private String value;
+
+              Protocol(String value) {
+                 this.value = value;
+              }
+
+              public static Protocol fromValue(String value) {
+                  return (Protocol) GetEnumValue.fromValueOrDefault(value, Protocol.UNRECOGNIZED);
+              }
+
+              @Override
+              public String toString() {
+                 return this.value;
+              }
+           }
+
+         public WinRM() {}
+
+         @AutoValue
+          public abstract static class ProtocolListener {
+
+             public abstract Protocol protocol();
+
+             @Nullable
+             public abstract String certificateUrl();
+
+             @SerializedNames({"protocol", "certificateUrl"})
+             public static ProtocolListener create(final Protocol protocol, final String certificateUrl) {
+
+                return new AutoValue_OSProfile_WindowsConfiguration_WinRM_ProtocolListener(
+                        protocol, certificateUrl);
+             }
+          }
 
          /**
           * Map of different settings
@@ -112,9 +158,11 @@ public abstract class OSProfile {
 
          public abstract String settingName();
 
-         public abstract String content();
+         @Nullable public abstract String content();
 
-         @SerializedNames({"pass", "component", "settingName", "content"})
+         public AdditionalUnattendContent() {}
+         
+         @SerializedNames({"passName", "componentName", "settingName", "content"})
          public static AdditionalUnattendContent create(final String pass, final String component,
                                                         final String settingName,
                                                         final String content) {
@@ -146,14 +194,10 @@ public abstract class OSProfile {
        */
       public abstract boolean enableAutomaticUpdates();
 
-      /**
-       * list of certificates
-       */
-      @Nullable
-      public abstract List<String> secrets();
+      
+      public WindowsConfiguration() {}
 
-      @SerializedNames({"provisionVMAgent", "winRM", "additionalUnattendContent", "enableAutomaticUpdates",
-              "secrets"})
+      @SerializedNames({"provisionVMAgent", "winRM", "additionalUnattendContent", "enableAutomaticUpdates"})
       public static WindowsConfiguration create(final boolean provisionVMAgent, final WinRM winRM,
                                                 final AdditionalUnattendContent additionalUnattendContent,
                                                 final boolean enableAutomaticUpdates, final List<String> secrets) {
@@ -163,6 +207,8 @@ public abstract class OSProfile {
       }
    }
 
+   public OSProfile() {}
+   
    /**
     * The computer name of the VM
     */
