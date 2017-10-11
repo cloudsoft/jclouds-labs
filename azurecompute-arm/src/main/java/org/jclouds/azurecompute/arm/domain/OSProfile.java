@@ -43,6 +43,8 @@ public abstract class OSProfile {
             @Nullable
             public abstract String keyData();
 
+            public SSHPublicKey() {}
+
             @SerializedNames({"path", "keyData"})
             public static SSHPublicKey create(final String path, final String keyData) {
 
@@ -52,10 +54,12 @@ public abstract class OSProfile {
          }
 
          /**
-          * The list of public keys and paths
+          * The listVaults of public keys and paths
           */
          @Nullable
          public abstract List<SSHPublicKey> publicKeys();
+
+         public SSH() {}
 
          @SerializedNames({"publicKeys"})
          public static SSH create(final List<SSHPublicKey> publicKeys) {
@@ -76,6 +80,8 @@ public abstract class OSProfile {
       @Nullable
       public abstract SSH ssh();
 
+      public LinuxConfiguration() {}
+      
       @SerializedNames({"disablePasswordAuthentication", "ssh"})
       public static LinuxConfiguration create(final String disablePasswordAuthentication,
                                               final SSH ssh) {
@@ -112,7 +118,9 @@ public abstract class OSProfile {
               }
            }
 
-          @AutoValue
+         public WinRM() {}
+
+         @AutoValue
           public abstract static class ProtocolListener {
 
              public abstract Protocol protocol();
@@ -148,9 +156,11 @@ public abstract class OSProfile {
 
          public abstract String settingName();
 
-         public abstract String content();
+         @Nullable public abstract String content();
 
-         @SerializedNames({"pass", "component", "settingName", "content"})
+         public AdditionalUnattendContent() {}
+         
+         @SerializedNames({"passName", "componentName", "settingName", "content"})
          public static AdditionalUnattendContent create(final String pass, final String component,
                                                         final String settingName,
                                                         final String content) {
@@ -182,6 +192,9 @@ public abstract class OSProfile {
        */
       public abstract boolean enableAutomaticUpdates();
 
+      
+      public WindowsConfiguration() {}
+
       @SerializedNames({"provisionVMAgent", "winRM", "additionalUnattendContent", "enableAutomaticUpdates"})
       public static WindowsConfiguration create(final boolean provisionVMAgent, final WinRM winRM,
                                                 final List<AdditionalUnattendContent> additionalUnattendContent,
@@ -192,6 +205,8 @@ public abstract class OSProfile {
       }
    }
 
+   public OSProfile() {}
+   
    /**
     * The computer name of the VM
     */
