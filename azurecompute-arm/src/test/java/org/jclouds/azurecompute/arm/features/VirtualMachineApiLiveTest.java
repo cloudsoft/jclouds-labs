@@ -16,11 +16,6 @@
  */
 package org.jclouds.azurecompute.arm.features;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.jclouds.util.Predicates2.retry;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +52,11 @@ import org.testng.annotations.Test;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jclouds.util.Predicates2.retry;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 @Test(groups = "live", testName = "VirtualMachineApiLiveTest")
 public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
@@ -221,8 +221,7 @@ public class VirtualMachineApiLiveTest extends BaseAzureComputeApiLiveTest {
       dataDisks.add(dataDisk);
       OSDisk osDisk = OSDisk.create(null, vmName, vhd, "ReadWrite", "FromImage", null);
       StorageProfile storageProfile = StorageProfile.create(imgRef, osDisk, dataDisks);
-      OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true,
-              null);
+      OSProfile.WindowsConfiguration windowsConfig = OSProfile.WindowsConfiguration.create(false, null, null, true);
       OSProfile osProfile = OSProfile.create(vmName, "azureuser", "RFe3&432dg", null, null, windowsConfig);
       IdReference networkInterface =
               IdReference.create("/subscriptions/" + subscriptionid +

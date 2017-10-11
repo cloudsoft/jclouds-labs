@@ -25,9 +25,11 @@
     <artifactId>jclouds-labs</artifactId>
     <version>2.0.1</version>
   </parent>
+  <groupId>io.clousoft.jclouds.labs</groupId>
   <artifactId>azurecompute-arm</artifactId>
   <name>jclouds Azure Compute ARM API</name>
-  <description>jclouds components to access an implementation of Azure's ARM Compute Service</description>
+  <version>2.0.1.2-20171011.1700</version>
+  <description>Cloudsoft :: jclouds components to access an implementation of Azure's ARM Compute Service</description>
   <packaging>bundle</packaging>
 
   <properties>
@@ -38,7 +40,7 @@
     <test.azurecompute-arm.build-version />
     <test.azurecompute-arm.identity>app id</test.azurecompute-arm.identity>
     <test.azurecompute-arm.credential>app password</test.azurecompute-arm.credential>
-    <jclouds.osgi.export>org.jclouds.azurecompute.arm*;version="${project.version}"</jclouds.osgi.export>
+    <jclouds.osgi.export>org.jclouds.azurecompute.arm*;version="2.0.1.2.20171011.1700"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.version}",*</jclouds.osgi.import>
   </properties>
 
@@ -46,7 +48,7 @@
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-compute</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.service</groupId>
@@ -61,45 +63,45 @@
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>
       <artifactId>oauth</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.api</groupId>
       <artifactId>oauth</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-compute</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds</groupId>
       <artifactId>jclouds-core</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-slf4j</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-sshj</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -121,7 +123,7 @@
     <dependency>
       <groupId>org.apache.jclouds.driver</groupId>
       <artifactId>jclouds-okhttp</artifactId>
-      <version>${project.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp</groupId>
@@ -141,6 +143,32 @@
       <version>${project.parent.version}</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.jclouds</groupId>
+            <artifactId>jclouds-resources</artifactId>
+            <version>${project.parent.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.gaul</groupId>
+        <artifactId>modernizer-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.jclouds</groupId>
+            <artifactId>jclouds-resources</artifactId>
+            <version>${project.parent.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
     <profile>
