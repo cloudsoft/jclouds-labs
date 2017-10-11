@@ -27,7 +27,7 @@
   </parent>
   <groupId>io.cloudsoft.jclouds.labs</groupId>
   <artifactId>azurecompute-arm</artifactId>
-  <version>2.0.1.1-20170526.0937</version>
+  <version>2.0.1.2-20171011.2153</version>
   <name>Cloudsoft :: jclouds Azure Compute ARM API</name>
   <description>jclouds components to access an implementation of Azure's ARM Compute Service</description>
   <packaging>bundle</packaging>
@@ -40,7 +40,7 @@
     <test.azurecompute-arm.build-version />
     <test.azurecompute-arm.identity>app id</test.azurecompute-arm.identity>
     <test.azurecompute-arm.credential>app password</test.azurecompute-arm.credential>
-    <jclouds.osgi.export>org.jclouds.azurecompute.arm*;version="${project.version}"</jclouds.osgi.export>
+    <jclouds.osgi.export>org.jclouds.azurecompute.arm*;version="2.0.1.2.20171011.2153"</jclouds.osgi.export>
     <jclouds.osgi.import>org.jclouds*;version="${project.parent.version}",*</jclouds.osgi.import>
   </properties>
 
