@@ -16,15 +16,8 @@
  */
 package org.jclouds.fujitsu.k5.compute.uk;
 
-import static org.testng.Assert.assertEquals;
-
-import org.jclouds.http.HttpRequest;
-import org.jclouds.http.HttpResponse;
-import org.jclouds.openstack.nova.v2_0.NovaApi;
 import org.jclouds.openstack.nova.v2_0.internal.BaseNovaApiExpectTest;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * This test ensures that the wiring in {@link K5UKProviderMetadata} is correct.
@@ -36,25 +29,6 @@ public class K5UKProviderMetadataExpectTest extends BaseNovaApiExpectTest {
       this.provider = "fujitsu-k5-compute-uk";
       this.identity = "myTenant:myUsername";
       this.credential = "myApiKey";
-   }
-
-   public void testCanGetConfiguredRegions() {
-
-      HttpRequest authenticate = HttpRequest.builder().method("POST")
-            .endpoint("https://identity.uk-1.cloud.global.fujitsu.com/v3/auth/tokens")
-            .addHeader("Accept", "application/json")
-            .payload(payloadFromStringWithContentType(
-                     "{\"auth\":{\"identity\":{\"methods\":[\"password\"],\"password\":{\"user\":{\"name\":\"myUsername\",\"password\":\"myApiKey\",\"domain\":{\"name\":\"myTenant\"}}}}}}"
-                     , "application/json")).build();
-
-
-      HttpResponse authenticationResponse = HttpResponse.builder().statusCode(200)
-            .payload(payloadFromResourceWithContentType("/token_k5_uk.json", "application/json")).build();
-
-      NovaApi whenNovaRegionExists = requestSendsResponse(authenticate, authenticationResponse);
-
-      assertEquals(whenNovaRegionExists.getConfiguredRegions(), ImmutableSet.of("LON"));
-
    }
 
 }
