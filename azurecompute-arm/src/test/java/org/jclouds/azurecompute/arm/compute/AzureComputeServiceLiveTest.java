@@ -18,6 +18,7 @@ package org.jclouds.azurecompute.arm.compute;
 
 import static org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions.Builder.resourceGroup;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_REMOVED;
 import static org.testng.Assert.assertTrue;
 
 import java.net.URI;
@@ -25,6 +26,7 @@ import java.util.Properties;
 
 import org.jclouds.azurecompute.arm.AzureComputeApi;
 import org.jclouds.azurecompute.arm.AzureComputeProviderMetadata;
+import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.internal.AzureLiveTestUtils;
 import org.jclouds.compute.domain.Template;
 import org.jclouds.compute.domain.TemplateBuilder;
@@ -53,6 +55,7 @@ import com.google.inject.name.Names;
 public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
    
    private Predicate<URI> resourceDeleted;
+   private Predicate<IdReference> resourceRemoved;
    private String resourceGroupName;
 
    public AzureComputeServiceLiveTest() {
@@ -65,6 +68,8 @@ public class AzureComputeServiceLiveTest extends BaseComputeServiceLiveTest {
       super.initializeContext();
       resourceDeleted = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<URI>>() {
       }, Names.named(TIMEOUT_RESOURCE_DELETED)));
+      resourceRemoved = context.utils().injector().getInstance(Key.get(new TypeLiteral<Predicate<IdReference>>() {
+      }, Names.named(TIMEOUT_RESOURCE_REMOVED)));
    }
 
    @Override

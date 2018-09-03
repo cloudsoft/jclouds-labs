@@ -19,6 +19,7 @@ package org.jclouds.azurecompute.arm.compute.config;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.OPERATION_TIMEOUT;
 import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_DELETED;
+import static org.jclouds.azurecompute.arm.config.AzureComputeProperties.TIMEOUT_RESOURCE_REMOVED;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_IMAGE_AVAILABLE;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_RUNNING;
 import static org.jclouds.compute.config.ComputeServiceProperties.TIMEOUT_NODE_SUSPENDED;
@@ -28,6 +29,7 @@ import static org.jclouds.util.Predicates2.retry;
 import java.net.URI;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -47,6 +49,7 @@ import org.jclouds.azurecompute.arm.compute.loaders.CreateSecurityGroupIfNeeded;
 import org.jclouds.azurecompute.arm.compute.loaders.DefaultResourceGroup;
 import org.jclouds.azurecompute.arm.compute.options.AzureTemplateOptions;
 import org.jclouds.azurecompute.arm.compute.strategy.CreateResourcesThenCreateNodes;
+import org.jclouds.azurecompute.arm.domain.IdReference;
 import org.jclouds.azurecompute.arm.domain.Image;
 import org.jclouds.azurecompute.arm.domain.Location;
 import org.jclouds.azurecompute.arm.domain.NetworkSecurityGroup;
@@ -72,23 +75,32 @@ import org.jclouds.compute.extensions.SecurityGroupExtension;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatement;
 import org.jclouds.compute.functions.NodeAndTemplateOptionsToStatementWithoutPublicKey;
 import org.jclouds.compute.options.TemplateOptions;
+import org.jclouds.compute.reference.ComputeServiceConstants;
 import org.jclouds.compute.reference.ComputeServiceConstants.PollPeriod;
 import org.jclouds.compute.reference.ComputeServiceConstants.Timeouts;
 import org.jclouds.compute.strategy.CreateNodesInGroupThenAddToSet;
+import org.jclouds.logging.Logger;
 import org.jclouds.net.domain.IpPermission;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Iterables;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 
 public class AzureComputeServiceContextModule extends
       ComputeServiceAdapterContextModule<VirtualMachine, VMHardware, VMImage, Location> {
+
+   @Resource
+   @Named(ComputeServiceConstants.COMPUTE_LOGGER)
+   protected Logger logger = Logger.NULL;
 
    @Override
    protected void configure() {
@@ -170,8 +182,39 @@ public class AzureComputeServiceContextModule extends
    @Named(TIMEOUT_RESOURCE_DELETED)
    protected Predicate<URI> provideResourceDeletedPredicate(final AzureComputeApi api, final Timeouts timeouts,
          final PollPeriod pollPeriod) {
-      return retry(new ActionDonePredicate(api), timeouts.nodeTerminated, pollPeriod.pollInitialPeriod,
+      long timeout = timeouts.nodeTerminated;
+      logger.debug("Creating resource timeout predicate with timeout %s", String.valueOf(timeout));
+      return retry(new ActionDonePredicate(api), timeout, pollPeriod.pollInitialPeriod,
             pollPeriod.pollMaxPeriod);
+   }
+
+   @Provides
+   @Named(TIMEOUT_RESOURCE_REMOVED)
+   protected Predicate<IdReference> provideResourceRemovedPredicate(final AzureComputeApi api, final Timeouts timeouts,
+         final PollPeriod pollPeriod) {
+      long timeout = timeouts.nodeTerminated;
+      return retry(new Predicate<IdReference>() {
+         @Override
+         public boolean apply(final IdReference input) {
+            List<org.jclouds.azurecompute.arm.domain.Resource> attachedResources = api.getResourceGroupApi().resources(input.resourceGroup());
+            Optional<org.jclouds.azurecompute.arm.domain.Resource> resourceInGroup = Iterables.tryFind(attachedResources, new Predicate<org.jclouds.azurecompute.arm.domain.Resource>() {
+               @Override
+               public boolean apply(org.jclouds.azurecompute.arm.domain.Resource resource) {
+                  return resource.id().equalsIgnoreCase(input.id());
+               }
+            });
+            if (logger.isTraceEnabled()) {
+               String attached = Joiner.on(",").join(attachedResources);
+               logger.trace("%s %sremoved from resource group %s. Attached resources are %s", input.id(),
+                     resourceInGroup.isPresent() ? "not " : "", input.resourceGroup(), attached);
+            }
+            String attached = Joiner.on(",").join(attachedResources);
+            logger.trace("%s %sremoved from resource group %s. Attached resources are %s", input.id(),
+                  resourceInGroup.isPresent() ? "not " : "", input.resourceGroup(), attached);
+
+            return !resourceInGroup.isPresent();
+         }
+      }, timeout, pollPeriod.pollInitialPeriod, pollPeriod.pollMaxPeriod);
    }
 
    @Provides
